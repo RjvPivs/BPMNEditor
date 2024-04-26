@@ -1,0 +1,11 @@
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+eclipse.project.name = appName + "-core"
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.github.mgsx-dev.gdx-gltf:gltf:2.1.0"
+    api "games.rednblack.gdxar:core:0.2-SNAPSHOT"
+}
