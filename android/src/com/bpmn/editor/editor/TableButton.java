@@ -1,4 +1,4 @@
-package com.bpmn.editor;
+package com.bpmn.editor.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

@@ -1,4 +1,13 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'io.realm.kotlin'
+    id 'org.jetbrains.kotlin.kapt'
+
+}
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'org.jetbrains.kotlin.kapt'
+
 android {
     namespace "com.bpmn.editor"
     buildToolsVersion "34.0.0"
@@ -44,12 +53,20 @@ android {
 }
 
 dependencies {
+    implementation "com.google.dagger:hilt-android:2.51.1"
+    implementation 'androidx.activity:activity:1.9.0'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
+    kapt "com.google.dagger:hilt-compiler:2.51.1"
+    implementation "androidx.hilt:hilt-navigation-compose:1.2.0"
+    implementation 'io.realm.kotlin:library-base:1.16.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.activity:activity:1.8.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.activity:activity-ktx:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
-
+kapt {
+    correctErrorTypes true
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders

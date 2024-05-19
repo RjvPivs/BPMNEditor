@@ -18,22 +18,6 @@ class SchemeAdapter(val listener: Listener) : RecyclerView.Adapter<SchemeAdapter
         fun onClickDel(scheme: Scheme)
     }
 
-    class SchemeHolder(item: View) : RecyclerView.ViewHolder(item) {
-        private val binding = SchemeItemBinding.bind(item)
-
-        @SuppressLint("SetTextI18n")
-        fun bind(scheme: Scheme, listener: Listener) = with(binding) {
-            schemeName.text = scheme.name
-            schemeDate.text = scheme.date.toString()
-            //binding.imageView2.setIma
-            settingButton.setOnClickListener {
-                listener.onClickDel(scheme)
-            }
-            schemeFrame.setOnClickListener {
-                listener.onClickMove(scheme)
-            }
-        }
-    }
 
     fun deleteAt(position: Int): Scheme {
         var scheme = schemeList[position]
@@ -60,7 +44,7 @@ class SchemeAdapter(val listener: Listener) : RecyclerView.Adapter<SchemeAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addPortfolio(scheme: Scheme) {
+    fun addScheme(scheme: Scheme) {
         schemeList.add(scheme)
         notifyDataSetChanged()
     }
@@ -70,4 +54,21 @@ class SchemeAdapter(val listener: Listener) : RecyclerView.Adapter<SchemeAdapter
         schemeList.remove(scheme)
         notifyDataSetChanged()
     }
+    class SchemeHolder(item: View) : RecyclerView.ViewHolder(item) {
+        private val binding = SchemeItemBinding.bind(item)
+
+        @SuppressLint("SetTextI18n")
+        fun bind(scheme: Scheme, listener: SchemeAdapter.Listener) = with(binding) {
+            schemeName.text = scheme.name
+            schemeDate.text = scheme.date
+            //binding.imageView2.setIma
+            settingButton.setOnClickListener {
+                listener.onClickDel(scheme)
+            }
+            schemeFrame.setOnClickListener {
+                listener.onClickMove(scheme)
+            }
+        }
+    }
 }
+
