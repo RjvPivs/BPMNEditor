@@ -53,6 +53,7 @@ class MongoRepositoryImpl(val realm: Realm) : MongoRepository {
                 query.actors.find { it._id == actor._id }!!.roleX = actor.roleX
                 query.actors.find { it._id == actor._id }!!.roleY = actor.roleY
                 query.actors.find { it._id == actor._id }!!.scale = actor.scale
+                query.actors.find { it._id == actor._id }!!.startWidth = actor.startWidth
             }
             val query1 = this.query<Actor>(query = "_id == $0", actor._id).first().find()
             query1!!.coordX = actor.coordX
@@ -65,6 +66,7 @@ class MongoRepositoryImpl(val realm: Realm) : MongoRepository {
             query1.roleX = actor.roleX
             query1.roleY = actor.roleY
             query1.scale = actor.scale
+            query1.startWidth = actor.startWidth
         }
     }
 

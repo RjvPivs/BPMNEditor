@@ -21,12 +21,14 @@ public class BPMNItem extends Actor {
     private final MongoRepository repository = DatabaseModule.INSTANCE.provideMongoRepository(DatabaseModule.INSTANCE.provideRealm());
     Sprite sprite;
     float firstX;
+    long last;
     float startWidth;
     Scheme scheme = null;
     com.bpmn.editor.model.Actor actorContainer;
 
     public BPMNItem(String s, Scheme scheme, com.bpmn.editor.model.Actor actor) {
         this.scheme = scheme;
+        last = -9999;
         if (actor == null) {
             sprite = new Sprite(new Texture(Gdx.files.internal(s)));
             actor = new com.bpmn.editor.model.Actor();

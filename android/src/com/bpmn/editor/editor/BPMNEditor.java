@@ -1,6 +1,7 @@
 package com.bpmn.editor.editor;
 
 import android.content.Intent;
+import android.view.GestureDetector;
 
 import com.bpmn.editor.data.DatabaseModule;
 import com.badlogic.gdx.Gdx;
@@ -23,6 +24,8 @@ import com.kotcrab.vis.ui.widget.CollapsibleWidget;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import java.util.concurrent.TimeUnit;
+
 import games.rednblack.gdxar.GdxArApplicationListener;
 import games.rednblack.gdxar.GdxFrame;
 import kotlin.coroutines.EmptyCoroutineContext;
@@ -32,6 +35,7 @@ public class BPMNEditor extends GdxArApplicationListener {
 
     private final MongoRepository repository = DatabaseModule.INSTANCE.provideMongoRepository(DatabaseModule.INSTANCE.provideRealm());
     AndroidLauncher androidLauncher;
+
     public BPMNEditor(String s, AndroidLauncher a) {
         androidLauncher = a;
         try {
@@ -110,26 +114,38 @@ public class BPMNEditor extends GdxArApplicationListener {
         stage.addActor(image);
         if (!scheme.getActors().isEmpty()) {
             for (Actor actor : scheme.getActors()) {
-                if (actor.getType().equals("BPMNItem")){
+                if (actor.getType().equals("BPMNItem")) {
                     BPMNItem t = new BPMNItem(actor.getSprite(), scheme, actor);
                     t.setBounds(actor.getCoordX(), actor.getCoordY(), actor.getWidth(), actor.getHeight());
-                    System.out.println("NIGGER");
-                    System.out.println(actor.getWidth());
-                    System.out.println(actor.getHeight());
+                    t.addListener(new ClickListener() {
+                        public void clicked(InputEvent event, float x, float y) {
+                            delete(t);
+                        }
+                    });
                     stage.addActor(t);
-                } else if (actor.getSprite().equals("style/321.json")){
+                } else if (actor.getSprite().equals("style/321.json")) {
                     Skin skin = new Skin(Gdx.files.internal(actor.getSprite()));
                     TextItem item = new TextItem(actor.getText(), skin, false, scheme, actor, actor.getRoleX(), actor.getRoleY());
                     item.setBounds(actor.getCoordX(), actor.getCoordY(), actor.getWidth(), actor.getHeight());
                     Group group = new Group();
                     group.addActor(item);
                     group.rotateBy(90);
+                    item.addListener(new ClickListener() {
+                        public void clicked(InputEvent event, float x, float y) {
+                            delete(item);
+                        }
+                    });
                     stage.addActor(group);
                 } else {
                     Skin skin = new Skin(Gdx.files.internal(actor.getSprite()));
                     TextItem item = new TextItem(actor.getText(), skin, true, scheme, actor, actor.getRoleX(), actor.getRoleY());
                     item.setBounds(actor.getCoordX(), actor.getCoordY(), actor.getWidth(), actor.getHeight());
                     //actor.setZIndex(1);
+                    item.addListener(new ClickListener() {
+                        public void clicked(InputEvent event, float x, float y) {
+                            delete(item);
+                        }
+                    });
                     item.setZIndex(item.getZIndex() + 1);
                     stage.addActor(item);
                 }
@@ -152,6 +168,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("simple/simpleBasic1.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -160,6 +181,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("simple/simpleBasic2.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -168,6 +194,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("simple/simpleBasic3.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -196,6 +227,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("messages/message1Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -204,6 +240,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("messages/message2Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -212,6 +253,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("messages/message3Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -220,6 +266,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("messages/message4Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -237,6 +288,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("timer/timer1Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -245,6 +301,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("timer/timer2Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -265,6 +326,11 @@ public class BPMNEditor extends GdxArApplicationListener {
                 actor.setBounds(stage.getWidth() / 2, stage.getHeight() / 2, 180, 124);
                 //actor.setZIndex(1);
                 actor.setZIndex(actor.getZIndex() + 1);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -288,6 +354,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("logic/logic1Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -296,6 +367,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("logic/logic2Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -304,6 +380,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("logic/logic3Basic.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
                 //Gdx.input.setInputProcessor(new GestureDetector(new DoubleTapDetector(actor)));
             }
@@ -332,6 +413,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -340,6 +426,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowDotB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -348,6 +439,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowUpB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -356,6 +452,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowUpDotB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -364,6 +465,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowDownB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -372,6 +478,11 @@ public class BPMNEditor extends GdxArApplicationListener {
             public void clicked(InputEvent event, float x, float y) {
                 BPMNItem actor = new BPMNItem("connections/arrowDownDotB.png", scheme, null);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(actor);
             }
         });
@@ -395,6 +506,11 @@ public class BPMNEditor extends GdxArApplicationListener {
                 group.addActor(actor);
                 group.rotateBy(90);
                 actor.moveBy(-325, 550);
+                actor.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        delete(actor);
+                    }
+                });
                 stage.addActor(group);
             }
         });
@@ -462,6 +578,35 @@ public class BPMNEditor extends GdxArApplicationListener {
         table.add(collapsibleRole).fillX().expandX().row();
         stage.addActor(table);
         table.align(Align.top);
+    }
+
+    public void delete(BPMNItem actor) {
+        if (actor.last != -9999) {
+            if (TimeUnit.MILLISECONDS.convert(System.nanoTime() - actor.last, TimeUnit.NANOSECONDS) < 300) {
+                try {
+                    BuildersKt.runBlocking(EmptyCoroutineContext.INSTANCE,
+                            (scope, continuation) -> repository.deleteActor(actor.scheme, actor.actorContainer, continuation));
+                } catch (InterruptedException e) {
+
+                }
+                actor.remove();
+            }
+        }
+        actor.last = System.nanoTime();
+    }
+    public void delete(TextItem actor) {
+        if (actor.last != -9999) {
+            if (TimeUnit.MILLISECONDS.convert(System.nanoTime() - actor.last, TimeUnit.NANOSECONDS) < 300) {
+                try {
+                    BuildersKt.runBlocking(EmptyCoroutineContext.INSTANCE,
+                            (scope, continuation) -> repository.deleteActor(actor.scheme, actor.actorContainer, continuation));
+                } catch (InterruptedException e) {
+
+                }
+                actor.remove();
+            }
+        }
+        actor.last = System.nanoTime();
     }
 
     @Override

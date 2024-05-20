@@ -88,7 +88,7 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
     State state;
     Stage stage;
     private FirstPersonCameraController cameraController;
-    ArrayList<Pair<Vector3, String>> texts;
+    ArrayList<Pair<Vector3, Pair<String, Boolean>>> texts;
 
     @Override
     public void renderARModels(GdxFrame frame) {
@@ -202,7 +202,8 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
                     sceneAsset = new GLTFLoader().load(Gdx.files.internal("3dmodels/arrowUpDot.gltf"));
                     break;
                 case "style/321.json":
-                    actor1.setCoordX(actor.getRoleY() - 1500 + 1600 + 500);
+                    float scale = 0;
+                    actor1.setCoordX(actor.getRoleY() - 1500 + 1600 + 500 - (100 + 5 * scale) * scale);
                     actor1.setCoordY(actor.getRoleX() - 2050 + 1415);
                     sceneAsset = new GLTFLoader().load(Gdx.files.internal("3dmodels/role.gltf"));
                     break;
@@ -221,13 +222,30 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
             }
             scene = new Scene(sceneAsset.scene);
 
-
-            if (!actor.getSprite().equals("style/321.json")) {
-                scene.modelInstance.transform.translate((((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 20f), (((actor1.getCoordY()) - stage.getHeight() / 2) / 50) , -0.5f);
+            if (actor.getSprite().equals("style/123.json")) {
+                scene.modelInstance.transform.translate((((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 20f), (((actor1.getCoordY()) - stage.getHeight() / 2) / 50), -0.5f);
+                texts.add(new Pair<>(new Vector3(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 22f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50+ 1f, 0f), new Pair<>(actor.getText(), false)));
+            } else if (!actor.getSprite().equals("style/321.json")) {
+                scene.modelInstance.transform.translate((((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 20f), (((actor1.getCoordY()) - stage.getHeight() / 2) / 50), -0.5f);
             } else {
+                //float scaling = actor.getScale() == 1f ? 0f : actor.getScale() * 1.7f;
+                System.out.println("BEBRA");
+                System.out.println(actor.getScale());
+                float scale;
+                if (actor.getScale() == 1.0) {
+                    scale = 0;
+                } else if (actor.getScale() > 1 && actor.getScale() < 2) {
+                    scale = actor.getScale() * actor.getScale() * 0.5f;
+                } else {
+                    scale = (float) (actor.getScale() * Math.sqrt(actor.getScale()));
+                }
+                System.out.println("ABOBA");
+                System.out.println(actor.getScale());
+                float scale1 = actor.getScale() < 2 ? -scale * (2f + actor.getScale()) : -scale * (0.3f + actor.getScale());
+                float scale2 = scale1 != 0 ? scale1 - 2f : 0;
                 scene.modelInstance.transform.translate(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 20f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, 0f);
-                texts.add(new Pair<>(new Vector3(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 17f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, 0f), actor.getText()));
-                File outputDir = launcher3D.getCacheDir();
+                scene.modelInstance.transform.translate(scale1, 0f, 0f);
+                texts.add(new Pair<>(new Vector3(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 17f + scale2, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, 0f), new Pair<>(actor.getText(), true)));
             }
             scene.modelInstance.transform.scale(actor.getScale(), actor.getScale(), 1f);
             scene.modelInstance.transform.translate(1f, 1f, 1f);
@@ -293,8 +311,8 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
         sceneManager.render();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        for (Pair<Vector3, String> v : texts) {
-            byte[] textByte = TextGenerator.generate(v.getSecond());
+        for (Pair<Vector3, Pair<String, Boolean>> v : texts) {
+            byte[] textByte = TextGenerator.generate(v.getSecond().getFirst());
             /*ContentResolver contentResolver = launcher3D.getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "asd.png");
@@ -347,7 +365,9 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
             dd.setPosition(v.getFirst());
             dd.setHeight(0.7f);
             dd.setWidth(1.5f);
-            dd.rotateZ(90);
+            if (v.getSecond().getSecond()){
+                dd.rotateZ(90);
+            }
             decalBatch.add(dd);
             Gdx.files.local("temp.png").delete();
         }

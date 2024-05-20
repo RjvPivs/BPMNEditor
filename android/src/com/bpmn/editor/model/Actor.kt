@@ -20,4 +20,5 @@ class Actor() : RealmObject {
     var roleX: Float = 0f
     var roleY: Float = 0f
     var scale: Float = 1f
+    var startWidth: Float = 0f
 }
