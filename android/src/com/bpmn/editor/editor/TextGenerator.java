@@ -11,6 +11,11 @@ import android.text.TextPaint;
 import java.io.ByteArrayOutputStream;
 
 public class TextGenerator {
+    /**
+     * Генератор текста для акторов.
+     * @param s Генерируемый текст.
+     * @return Картинка с текстом.
+     */
     public static byte[] generate(String s) {
         float textSize = 30;
         String text = s;

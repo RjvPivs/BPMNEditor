@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main">#FF26262B</color>
     <color name="orange">#FE8631</color>
+    <color name="grey">#FCFCFC</color>
     <color name="ic_background_color">#FFFFFFFF</color>
 </resources>

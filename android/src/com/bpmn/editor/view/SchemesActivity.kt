@@ -1,8 +1,13 @@
 package com.bpmn.editor.view
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bpmn.editor.adapter.SchemeAdapter
@@ -12,6 +17,7 @@ import com.bpmn.editor.model.Scheme
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bpmn.editor.R
 import com.bpmn.editor.adapter.SwipeToDeleteCallback
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -20,11 +26,13 @@ class SchemesActivity : AppCompatActivity(), SchemeAdapter.Listener {
     private val repository = DatabaseModule.provideMongoRepository(DatabaseModule.provideRealm())
     private lateinit var binding: ActivitySchemesBinding
     private val adapter = SchemeAdapter(this)
+    lateinit var dialogScheme: Dialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySchemesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
+        dialogScheme = Dialog(this)
         repository.getSchemes().asLiveData().observe(this) { it ->
             adapter.clear()
             it.forEach {
@@ -72,6 +80,25 @@ class SchemesActivity : AppCompatActivity(), SchemeAdapter.Listener {
     }
 
     override fun onClickDel(scheme: Scheme) {
-        TODO("Not yet implemented")
+        showDialogEdit(scheme)
+    }
+
+    /**
+     * Метод для изменения названия.
+     */
+    private fun showDialogEdit(scheme: Scheme) {
+        dialogScheme.setContentView(R.layout.activity_edit_scheme)
+        dialogScheme.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        var saveButton: ImageButton = dialogScheme.findViewById(R.id.saveEditedPortfolio)
+        var newName: EditText = dialogScheme.findViewById(R.id.editedName)
+        saveButton.setOnClickListener {
+            runBlocking {
+                launch {
+                    repository.updateSchemeName(scheme.name, newName.text.toString())
+                }
+                runOnUiThread { dialogScheme.dismiss() }
+            }
+        }
+        dialogScheme.show()
     }
 }

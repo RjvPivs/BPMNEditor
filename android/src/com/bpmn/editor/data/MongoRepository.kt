@@ -13,4 +13,5 @@ interface MongoRepository {
     suspend fun deleteActor(scheme: Scheme, actor: Actor)
     suspend fun updateActor(scheme: Scheme, actor: Actor)
     suspend fun getActor(actor: Actor): Actor?
+    suspend fun updateSchemeName(name: String, newName: String)
 }

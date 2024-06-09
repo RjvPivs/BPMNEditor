@@ -84,4 +84,12 @@ class MongoRepositoryImpl(val realm: Realm) : MongoRepository {
             }
         }
     }
+    override suspend fun updateSchemeName(name: String, newName: String) {
+        realm.write {
+            val query = query<Scheme>(query = "name == $0", name).first().find()
+            if (query != null) {
+                query.name = newName
+            }
+        }
+    }
 }

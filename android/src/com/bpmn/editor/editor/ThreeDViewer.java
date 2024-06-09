@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -112,15 +113,20 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
         getArAPI().enableSurfaceGeometry(true);
         getArAPI().setRenderAR(false);
         VisTable modes = new VisTable(true);
-        TableButton twoD = new TableButton("modes/2D.png");
-        TableButton threeD = new TableButton("modes/3D.png");
+        TableButton twoD = new TableButton("modes/2DOFF.png");
+        TableButton threeD = new TableButton("modes/3DON.png");
         TableButton AR = new TableButton("modes/AR.png");
         AR.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 state = State.AR;
                 getArAPI().setRenderAR(true);
-                System.out.println("TOUCHED");
+            }
+        });
+        twoD.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                state = State.TWOD;
             }
         });
         threeD.addListener(new ClickListener() {
@@ -249,39 +255,19 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
             }
             scene.modelInstance.transform.scale(actor.getScale(), actor.getScale(), 1f);
             scene.modelInstance.transform.translate(1f, 1f, 1f);
-            //
-            //scene.modelInstance.transform.translate(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 17f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, 0f);
-            //scene.modelInstance.transform.set(new Matrix4().translate(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 20f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, 0f));
-            //scene.modelInstance.transform.set(scene.modelInstance.getX)
-            //scene.modelInstance.transform.setToOrtho2D(((actor1.getCoordX()) - stage.getWidth() - 2) / 50 + 17f, ((actor1.getCoordY()) - stage.getHeight() / 2) / 50, actor.getWidth(), actor.getHeight());
-            //scene.modelInstance.transform.set
             sceneManager.addScene(scene);
         }
-        //sceneAsset = new GLTFLoader().load(Gdx.files.internal("test1.gltf"));
-        //scene = new Scene(sceneAsset.scene);
-        //scene2 = new Scene((new GLTFLoader().load(Gdx.files.internal("road.gltf")).scene));
-        //
-        //sceneManager.addScene(scene);
-        //sceneManager.addScene(scene2);
-        //scene.modelInstance.transform.set(new Matrix4().translate(new Vector3(18f, -8.5f, 0)));
-        //scene.modelInstance.transform.set(new Matrix4().translate(new Vector3(0, 500, 0)));
-        //scene2.modelInstance.transform.set((new Matrix4().translate(new Vector3(0, -1f, 0))));
-        // setup camera (The BoomBox model is very small so you may need to adapt camera settings for your scene)
         cameraController = new FirstPersonCameraController(camera);
-        //camera.rotateAround(new Vector3(0,0,0), Vector3.Y, 45);
-        // setup light
         light = new DirectionalLightEx();
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         sceneManager.environment.add(light);
 
-        // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
         environmentCubemap = iblBuilder.buildEnvMap(1024);
         diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
-        // This texture is provided by the library, no need to have it in your assets.
         brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
         sceneManager.setAmbientLight(1f);
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
@@ -303,46 +289,13 @@ public class ThreeDViewer extends GdxArApplicationListener implements InputProce
         }
         float deltaTime = Gdx.graphics.getDeltaTime();
         time += deltaTime;
-        //cameraController.update();
         processInput(deltaTime);
-        // render
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         sceneManager.update(deltaTime);
         sceneManager.render();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
         for (Pair<Vector3, Pair<String, Boolean>> v : texts) {
             byte[] textByte = TextGenerator.generate(v.getSecond().getFirst());
-            /*ContentResolver contentResolver = launcher3D.getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "asd.png");
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-            Uri uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-            String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
-            String sss = null;
-            Cursor metaCursor = contentResolver.query(uri, projection, null, null, null);
-            if (metaCursor != null) {
-                try {
-                    if (metaCursor.moveToFirst()) {
-                        sss = metaCursor.getString(0);
-                    }
-                } finally {
-                    metaCursor.close();
-                }
-            }
-            try {
-                final OutputStream out = contentResolver.openOutputStream(uri);
-                out.write(textByte);
-                out.close();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }*/
-            //System.out.println("AAA");
-            //System.out.println(uri);
-            //System.out.println(String.valueOf(launcher3D.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS))+'/'+sss);
             File file = new File(Gdx.files.getLocalStoragePath(), "temp.png");
             try {
                 file.createNewFile();

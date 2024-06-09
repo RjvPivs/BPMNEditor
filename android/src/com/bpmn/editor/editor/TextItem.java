@@ -20,6 +20,9 @@ import java.util.concurrent.TimeUnit;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 
+/**
+ * Актор с текстом.
+ */
 public class TextItem extends TextArea {
     private final MongoRepository repository = DatabaseModule.INSTANCE.provideMongoRepository(DatabaseModule.INSTANCE.provideRealm());
     com.bpmn.editor.model.Actor actorContainer;
@@ -27,12 +30,23 @@ public class TextItem extends TextArea {
     float startWidth;
     float firstX;
     long last;
+    float border;
     String sprite;
     String txt;
     Scheme scheme;
     float roleX;
     float roleY;
 
+    /**
+     * Конструктор.
+     * @param text Текст, который должен быть отображён.
+     * @param skin Дизайн актора.
+     * @param isAction Является ли актор действием?
+     * @param scheme Схема, к которой актор относится.
+     * @param actor Актор для восстановления на сцене.
+     * @param roleX Позиция по Х для дорожки.
+     * @param roleY Позиция по Y для дорожки.
+     */
     public TextItem(String text, Skin skin, Boolean isAction, Scheme scheme, com.bpmn.editor.model.Actor actor, float roleX, float roleY) {
         super(text, skin);
         this.scheme = scheme;
@@ -130,7 +144,10 @@ public class TextItem extends TextArea {
             }
         });
     }
-
+    /**
+     * Метод изменения размера
+     * @param f Во сколько раз изменился размер.
+     */
     public void change(float f) {
         setBounds(getX(), getY(), getWidth() * f, getHeight() * f);
         com.bpmn.editor.model.Actor finalActor = actorContainer;

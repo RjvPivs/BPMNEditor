@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.bpmn.editor.data.DatabaseModule;
 import com.bpmn.editor.data.MongoRepository;
@@ -17,18 +18,30 @@ import com.bpmn.editor.model.Scheme;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 
+/**
+ * Расширенный актор.
+ */
 public class BPMNItem extends Actor {
     private final MongoRepository repository = DatabaseModule.INSTANCE.provideMongoRepository(DatabaseModule.INSTANCE.provideRealm());
     Sprite sprite;
     float firstX;
     long last;
+    Stage border;
     float startWidth;
     Scheme scheme = null;
     com.bpmn.editor.model.Actor actorContainer;
 
-    public BPMNItem(String s, Scheme scheme, com.bpmn.editor.model.Actor actor) {
+    /**
+     * Конструктор.
+     * @param s Путь до спрайта.
+     * @param scheme Схема, к которой актор относится.
+     * @param actor Актор для восстановления на сцене.
+     * @param border Границы, за которые нельзя перемещать актор.
+     */
+    public BPMNItem(String s, Scheme scheme, com.bpmn.editor.model.Actor actor, Stage border) {
         this.scheme = scheme;
         last = -9999;
+        this.border = border;
         if (actor == null) {
             sprite = new Sprite(new Texture(Gdx.files.internal(s)));
             actor = new com.bpmn.editor.model.Actor();
@@ -61,7 +74,7 @@ public class BPMNItem extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 //return super.touchDown(event, x, y, pointer, button);
-                if (firstX == -9999 && (abs(x - BPMNItem.this.getWidth()) < BPMNItem.this.getWidth() * 0.03)) {
+                if (firstX == -9999 && (abs(x - BPMNItem.this.getWidth()) < BPMNItem.this.getWidth() * 0.05)) {
                     firstX = x;
                 }
                 return true;
@@ -77,7 +90,19 @@ public class BPMNItem extends Actor {
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
                 if (firstX == -9999) {
-                    BPMNItem.this.moveBy(x - BPMNItem.this.getWidth() / 2, y - BPMNItem.this.getHeight() / 2);
+                    if (BPMNItem.this.getX() + x - BPMNItem.this.getWidth() / 2 < border.getWidth() / 4){
+                        BPMNItem.this.setX(border.getWidth() / 4);
+                        BPMNItem.this.moveBy(0, y - BPMNItem.this.getHeight() / 2);
+                    } else if(BPMNItem.this.getY() + y - BPMNItem.this.getHeight() / 2> border.getHeight()- BPMNItem.this.getHeight()){
+                        BPMNItem.this.moveBy(x - BPMNItem.this.getWidth() / 2, 0);
+                        BPMNItem.this.setY(border.getHeight() - BPMNItem.this.getHeight());
+                    } else if(BPMNItem.this.getY() + y - BPMNItem.this.getHeight() / 2 < 0 ){
+                        BPMNItem.this.setY(0);
+                        BPMNItem.this.moveBy(x - BPMNItem.this.getWidth() / 2, 0);
+                    }
+                    else {
+                        BPMNItem.this.moveBy(x - BPMNItem.this.getWidth() / 2, y - BPMNItem.this.getHeight() / 2);
+                    }
                 } else {
                     if (firstX < 0) {
                         change(abs(firstX / x));
@@ -90,6 +115,10 @@ public class BPMNItem extends Actor {
         });
     }
 
+    /**
+     * Метод изменения размера
+     * @param f Во сколько раз изменился размер.
+     */
     public void change(float f) {
         sprite.setSize((float) (sprite.getWidth() * f), (float) (sprite.getHeight() * f));
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());

@@ -3,6 +3,7 @@ package com.bpmn.editor.editor;
 import android.content.Intent;
 import android.view.GestureDetector;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.bpmn.editor.data.DatabaseModule;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -56,6 +57,9 @@ public class BPMNEditor extends GdxArApplicationListener {
 
     }
 
+    /**
+     * Метод, вызываемый при создании класса. Выполняется один раз. Здесь добавляются объекты на сцену, добавляются слушатели.
+     */
     @Override
     public void create() {
         getArAPI().setPowerSaveMode(false);
@@ -115,7 +119,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         if (!scheme.getActors().isEmpty()) {
             for (Actor actor : scheme.getActors()) {
                 if (actor.getType().equals("BPMNItem")) {
-                    BPMNItem t = new BPMNItem(actor.getSprite(), scheme, actor);
+                    BPMNItem t = new BPMNItem(actor.getSprite(), scheme, actor, stage);
                     t.setBounds(actor.getCoordX(), actor.getCoordY(), actor.getWidth(), actor.getHeight());
                     t.addListener(new ClickListener() {
                         public void clicked(InputEvent event, float x, float y) {
@@ -154,8 +158,6 @@ public class BPMNEditor extends GdxArApplicationListener {
 
         }
         VisTable table = new VisTable(true);
-        //table.debugAll();
-
         TableButton buttonEvent = new TableButton("buttons/buttonEvent.png");
         VisTable eventTable = new VisTable();
         eventTable.add(buttonEvent);
@@ -166,7 +168,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         simple1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("simple/simpleBasic1.png", scheme, null);
+                BPMNItem actor = new BPMNItem("simple/simpleBasic1.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -179,7 +181,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         simple2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("simple/simpleBasic2.png", scheme, null);
+                BPMNItem actor = new BPMNItem("simple/simpleBasic2.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -192,7 +194,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         simple3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("simple/simpleBasic3.png", scheme, null);
+                BPMNItem actor = new BPMNItem("simple/simpleBasic3.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -203,7 +205,6 @@ public class BPMNEditor extends GdxArApplicationListener {
             }
         });
         VisTable simpleTable = new VisTable(true);
-        //simpleTable.debugAll();
         simpleTable.setWidth(table.getWidth());
         simpleTable.align(Align.center);
         simpleTable.add(simple1);
@@ -212,8 +213,6 @@ public class BPMNEditor extends GdxArApplicationListener {
         final CollapsibleWidget collapsibleSimple = new CollapsibleWidget(simpleTable);
         collapsibleSimple.setWidth(table.getWidth());
         collapsibleSimple.setCollapsed(true);
-
-
         TableButton buttonAction = new TableButton("buttons/buttonActions.png");
         VisTable actionTable = new VisTable();
         actionTable.add(buttonAction);
@@ -225,7 +224,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         message1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("messages/message1Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("messages/message1Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -238,7 +237,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         message2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("messages/message2Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("messages/message2Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -251,7 +250,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         message3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("messages/message3Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("messages/message3Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -264,7 +263,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         message4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("messages/message4Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("messages/message4Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -286,7 +285,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         timer1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("timer/timer1Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("timer/timer1Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -299,7 +298,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         timer2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("timer/timer2Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("timer/timer2Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -324,7 +323,6 @@ public class BPMNEditor extends GdxArApplicationListener {
                 Skin skin = new Skin(Gdx.files.internal("style/123.json"));
                 TextItem actor = new TextItem("Input here", skin, true, scheme, null, stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.setBounds(stage.getWidth() / 2, stage.getHeight() / 2, 180, 124);
-                //actor.setZIndex(1);
                 actor.setZIndex(actor.getZIndex() + 1);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -352,7 +350,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         logic1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("logic/logic1Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("logic/logic1Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -365,7 +363,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         logic2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("logic/logic2Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("logic/logic2Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -378,7 +376,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         logic3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("logic/logic3Basic.png", scheme, null);
+                BPMNItem actor = new BPMNItem("logic/logic3Basic.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -386,7 +384,6 @@ public class BPMNEditor extends GdxArApplicationListener {
                     }
                 });
                 stage.addActor(actor);
-                //Gdx.input.setInputProcessor(new GestureDetector(new DoubleTapDetector(actor)));
             }
         });
         TableButton buttonConnection = new TableButton("buttons/buttonConnection.png");
@@ -411,7 +408,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -424,7 +421,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection0.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowDotB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowDotB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -437,7 +434,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowUpB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowUpB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -450,7 +447,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowUpDotB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowUpDotB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -463,7 +460,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowDownB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowDownB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -476,7 +473,7 @@ public class BPMNEditor extends GdxArApplicationListener {
         connection4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                BPMNItem actor = new BPMNItem("connections/arrowDownDotB.png", scheme, null);
+                BPMNItem actor = new BPMNItem("connections/arrowDownDotB.png", scheme, null, stage);
                 actor.setPosition(stage.getWidth() / 2, stage.getHeight() / 2);
                 actor.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
@@ -580,6 +577,10 @@ public class BPMNEditor extends GdxArApplicationListener {
         table.align(Align.top);
     }
 
+    /**
+     * Метод удаления актора со сцены.
+     * @param actor Удаляемый актор.
+     */
     public void delete(BPMNItem actor) {
         if (actor.last != -9999) {
             if (TimeUnit.MILLISECONDS.convert(System.nanoTime() - actor.last, TimeUnit.NANOSECONDS) < 300) {
@@ -594,6 +595,10 @@ public class BPMNEditor extends GdxArApplicationListener {
         }
         actor.last = System.nanoTime();
     }
+    /**
+     * Метод удаления актора с текстом со сцены.
+     * @param actor Удаляемый текстоый актор.
+     */
     public void delete(TextItem actor) {
         if (actor.last != -9999) {
             if (TimeUnit.MILLISECONDS.convert(System.nanoTime() - actor.last, TimeUnit.NANOSECONDS) < 300) {
@@ -609,6 +614,9 @@ public class BPMNEditor extends GdxArApplicationListener {
         actor.last = System.nanoTime();
     }
 
+    /**
+     * Метод рендеринга.
+     */
     @Override
     public void render() {
         if (state == State.TWOD) {
@@ -619,6 +627,9 @@ public class BPMNEditor extends GdxArApplicationListener {
         stage.draw();
     }
 
+    /**
+     * Метод удаления сцены.
+     */
     @Override
     public void dispose() {
         stage.dispose();
